@@ -19,7 +19,7 @@ class JokesController extends Controller
     {
         $jokes = Joke::all();
         return Response::json([
-            'data' => $jokes
+            'data' => $this->transformCollection($jokes)
         ], 200);
     }
 
@@ -63,7 +63,7 @@ class JokesController extends Controller
         }
 
         return Response::json([
-            'data' => $joke
+            'data' => $this->transform($joke)
         ], 200);
     }
 
@@ -99,5 +99,18 @@ class JokesController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    private function transformCollection($jokes)
+    {
+        return array_map([$this, 'transform'], $jokes->toArray());
+    }
+
+    private function transform($joke)
+    {
+        return [
+            'joke_id' => $joke['id'],
+            'joke' => $joke['body']
+        ];
     }
 }
