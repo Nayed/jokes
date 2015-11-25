@@ -113,7 +113,7 @@ class JokesController extends Controller
      */
     public function update(Request $request, $id)
     {
-        if(!$request->body || $request->user_id) {
+        if(!$request->body || !$request->user_id) {
             return Response::json([
                 'error' => [
                     'message' => 'Please provide both body and user_id'
