@@ -42,7 +42,20 @@ class JokesController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        if(!$request->body || !$request->user_id) {
+            return Response::json([
+                'error' => [
+                    'message' => 'Please provide both body and user_id'
+                ]
+            ], 422);
+        }
+
+        $joke = Joke::create($request->all());
+
+        return Response::json({
+            'message' => 'Joke created successfully',
+            'data' => $this->transform($joke);
+        });
     }
 
     /**
@@ -100,7 +113,22 @@ class JokesController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        if(!$request->body || $request->user_id) {
+            return Response::json([
+                'error' => [
+                    'message' => 'Please provide both body and user_id'
+                ]
+            ], 422);
+        }
+
+        $joke = Joke::find($id);
+        $joke->body = $request->body;
+        $joke->user_id = $request->user_id;
+        $joke->save();
+
+        return Response::json([
+            'message' => 'Joke updated successfully'
+        ]);
     }
 
     /**
@@ -111,7 +139,7 @@ class JokesController extends Controller
      */
     public function destroy($id)
     {
-        //
+        Joke::destroy($id);
     }
 
     private function transformCollection($jokes)
