@@ -52,10 +52,10 @@ class JokesController extends Controller
 
         $joke = Joke::create($request->all());
 
-        return Response::json({
+        return Response::json([
             'message' => 'Joke created successfully',
-            'data' => $this->transform($joke);
-        });
+            'data' => $this->transform($joke)
+        ]);
     }
 
     /**
