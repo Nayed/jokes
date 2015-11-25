@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Joke;
-use Illuminate\Http\Request;
 use Response;
+use Illuminate\Http\Request;
+use App\Joke;
+use App\User;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
@@ -52,7 +53,11 @@ class JokesController extends Controller
      */
     public function show($id)
     {
-        $joke = Joke::find($id);
+        $joke = Joke::with(
+            array('User' => function($query) {
+                $query->select('id', 'name');
+            })
+        )->find($id);
 
         if(!$joke) {
             return Response::json([
@@ -62,7 +67,15 @@ class JokesController extends Controller
             ], 404);
         }
 
+        // get previous joke id
+        $previous = Joke::where('id', '<', $joke->id)->max('id');
+
+        // get next joke id
+        $next = Joke::where('id', '>', $joke->id)->min('id');
+
         return Response::json([
+            'previous_joke_id' => $previous,
+            'next_joke_id' => $next,
             'data' => $this->transform($joke)
         ], 200);
     }
@@ -110,7 +123,8 @@ class JokesController extends Controller
     {
         return [
             'joke_id' => $joke['id'],
-            'joke' => $joke['body']
+            'joke' => $joke['body'],
+            'submitted_by' => $joke['user']['name']
         ];
     }
 }
