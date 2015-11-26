@@ -18,15 +18,32 @@ class JokesController extends Controller
      */
     public function index(Request $request)
     {
+        $searchTerm = $request->input('search');
         $limit = $request->input('limit') ? $request->input('limit') : 5;
 
-        $jokes = Joke::with(
-            array('User' => function($query) {
-                $query->select('id', 'name');
-            })
+        if($searchTerm) {
+            $jokes = Joke::orderBy('id', 'DESC')->where('body', 'LIKE', "%$searchTerm%")
+                ->with(array('User' => function($query) {
+                    $query->select('id', 'name');
+                })
             )->select('id', 'body', 'user_id')->paginate($limit);
 
-        $jokes->appends(compact('limit'));
+            $jokes->appends(array(
+                'search' => $searchTerm,
+                'limit' => $limit
+            ));
+        }
+        else {
+            $jokes = Joke::orderBy('id', 'DESC')->with(
+                array('User' => function($query) {
+                    $query->select('id', 'name');
+                })
+            )->select('id', 'body', 'user_id')->paginate($limit);
+
+            $jokes->appends(array(
+                'limit' => $limit
+            ));
+        }        
 
         return Response::json($this->transformCollection($jokes), 200);
     }
