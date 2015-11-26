@@ -16,13 +16,17 @@ class JokesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        $limit = $request->input('limit') ? $request->input('limit') : 5;
+
         $jokes = Joke::with(
             array('User' => function($query) {
                 $query->select('id', 'name');
             })
-            )->select('id', 'body', 'user_id')->paginate(5);
+            )->select('id', 'body', 'user_id')->paginate($limit);
+
+        $jokes->appends(compact('limit'));
 
         return Response::json($this->transformCollection($jokes), 200);
     }
