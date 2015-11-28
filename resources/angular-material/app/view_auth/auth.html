@@ -1,1 +1,28 @@
-,n
+<div class="container" layout="column" ng-cloak>
+    <div class="row">
+        <div class="col-md-4 col-md-offset-4">
+            <md-content layout-padding>
+            <form name="authForm">
+                <md-input-container class="md-block">
+                    <label>Email</label>
+                    <input md-maxlength="50" required name="email" ng-model="auth.email">
+                    <div ng-messages="authForm.email.$error">
+                        <div ng-message="required">This is required.</div>
+                        <div ng-message="md-maxlength">The email has to be less than 50 characters long.</div>
+                    </div>
+                </md-input-container>
+                <md-input-container class="md-block">
+                    <label>Password</label>
+                    <input required type="password" name="password" ng-model="auth.password">
+                    <div ng-messages="authForm.password.$error">
+                        <div ng-message="required">This is required.</div>
+                    </div>
+                </md-input-container>
+
+                <md-button class="md-raised md-primary" ng-click="auth.login()">Sign in</md-button>
+                <md-button type="reset" class="md-raised">Reset</md-button>
+            </form>
+            </md-content>
+        </div>
+    </div>
+</div>
