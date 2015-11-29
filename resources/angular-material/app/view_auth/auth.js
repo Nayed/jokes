@@ -1,7 +1,8 @@
+"use strict"
+
 angular.module('myApp.auth', [])
 
 .config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $urlRouterProvider) {
-    $urlRouterProvider.otherwise('/');
     $stateProvider
     .state('auth', {
         url: "/auth",
@@ -14,6 +15,30 @@ angular.module('myApp.auth', [])
     })
 }])
 
-.controller('AuthCtrl', ['$rootScope', function($rootScope){
- 
+.controller('AuthCtrl', ['$auth', '$state', '$http', '$rootScope', function($auth, $state, $http, $rootScope) {
+    let vm = this
+
+    vm.loginError = false
+    vm.loginErrorText
+
+    vm.login = () => {
+        let credentials = {
+            email: vm.email,
+            password: vm.password
+        }
+
+        $auth.login(credentials).then(() => {
+            $http.get('http://localhost:8000/api/v1/authenticate/user').success((response) => {
+                let user = JSON.stringify(response.user)
+                localStorage.setItem('user', user)
+                $rootScope.currentUser = response.user
+                $state.go('jokes')
+            })
+            .error(() => {
+                vm.loginError = true
+                vm.loginErrorText = error.data.error
+                console.log(vm.loginErrorText)
+            })
+        })
+    }
 }])

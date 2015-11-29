@@ -5,7 +5,8 @@ angular.module('myApp', [
     //'myApp.view2',
     'myApp.auth',
     //'myApp.version'
-    'ngMaterial'
+    'ngMaterial',
+    'satellizer'
 ])
 
  /*.config(function($mdThemingProvider) {
@@ -14,3 +15,8 @@ angular.module('myApp', [
     .accentPalette('orange');
  });
 */
+
+.config(['$stateProvider', '$urlRouterProvider', '$authProvider', function($stateProvider, $urlRouterProvider, $authProvider) {
+    $authProvider.loginUrl = 'http://localhost:8000/api/v1/authenticate'
+    $urlRouterProvider.otherwise('/auth')
+}])
