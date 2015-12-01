@@ -6,6 +6,12 @@ angular.module('myApp.auth', [])
     $stateProvider
     .state('auth', {
         url: "/auth",
+        data: {
+            permissions: {
+                except: ['isloggedin'],
+                redirectTo: 'jokes'
+            }
+        },
         views: {
             "jokesContent": {
                 templateUrl: "view_auth/auth.html",

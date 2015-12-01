@@ -6,6 +6,12 @@ angular.module('myApp.jokes', [])
     $stateProvider
     .state('jokes', {
         url: '/jokes',
+        data: {
+            permissions: {
+                except: ['anonymous'],
+                redirectTo: 'auth'
+            }
+        },
         views: {
             'jokesContent': {
                 templateUrl: "view_jokes/jokes.html",

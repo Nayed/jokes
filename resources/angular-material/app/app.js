@@ -6,7 +6,8 @@ angular.module('myApp', [
     'myApp.auth',
     //'myApp.version'
     'ngMaterial',
-    'satellizer'
+    'satellizer',
+    'permission'
 ])
 
 .config(/*function($mdThemingProvider) {
@@ -20,7 +21,7 @@ angular.module('myApp', [
     }]
 )
 
-.run(function($rootScope, $state, $auth) {
+.run(function($rootScope, $state, $auth, Permission) {
     $rootScope.logout = () => {
         $auth.logout().then(() => {
             localStorage.removeItem('user')
@@ -29,4 +30,25 @@ angular.module('myApp', [
         })
     }
     $rootScope.currentUser = JSON.parse(localStorage.getItem('user'))
+
+
+    Permission
+        .defineRole('anonymous', function(stateParams) {
+            /*  if the returned value is *truthy* then the user has the role, otherwise they don't
+                let User = JSON.parse(localStorage.getItem('user'))
+                console.log("anonymous", $auth.isAuthenticated())*/
+            if (!$auth.isAuthenticated()) {
+                return true // is anonymous
+            }
+            return false
+        })
+        .defineRole('isloggedin', function(stateParams) {
+            /*  if the returned value is *truthy* then the user has the role, otherwise they don't
+                console.log("isloggedin", $auth.isAuthenticated())*/
+            if ($auth.isAuthenticated()) {
+                return true // is loggedin
+            }
+            return false
+        })
 })
+
