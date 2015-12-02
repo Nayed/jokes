@@ -1,13 +1,34 @@
 <div class="col-sm-6 col-sm-offset-3" >
-<md-content flex style="margin: 16px; border-radius: 1px; border: 1px solid #ddd">
-    <md-list>
-        <md-list-item ng-repeat="joke in jokes.jokes">
-            <div class="md-list-item-text">
-                <h5>{{joke.joke}}</h5>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="Add new joke.." ng-model="jokes.joke">
+                <span class="input-group-btn">
+                <button class="btn btn-default" type="button" ng-click="jokes.addJoke()">Add!</button>
+                </span>
+            </div><!-- /input-group -->
+        </div><!-- /.col-lg-6 -->
+        </div>
+        <br>
+        <div>
+        <ul class="list-group">
+            <li class="list-group-item" ng-repeat="joke in jokes.jokes">
+                <span ng-hide="editEnabled">
+                            {{joke.joke}}
+                                <a href="#" ng-click="editEnabled=!editEnabled"><span class="glyphicon glyphicon-pencil" ></span></a>
+                </span>
+                <span ng-show="editEnabled">
+                            <input ng-model="joke.joke">
+                            <a href="#" ng-click="editEnabled=!editEnabled; jokes.updateJoke(joke)"><span class="glyphicon glyphicon-ok" ></span></a>
+                </span>
+                <!-- <h4>{{joke.joke}}</h4> -->
+                <span style="cursor: pointer;" class="glyphicon glyphicon-trash" ng-click="jokes.deleteJoke($index, joke.joke_id)"></span>
                 <h5>{{joke.submitted_by}}</h5>
-            </div>
-        <md-divider inset></md-divider>
-        </md-list-item>
-    </md-list>
-</md-content>
+            </li>
+        </ul>
+        <div class="alert alert-danger" ng-if="jokes.error">
+            <strong>There was an error: </strong> {{jokes.error}}
+            <br>Please go back and login again...
+        </div>
+    </div>
 </div>

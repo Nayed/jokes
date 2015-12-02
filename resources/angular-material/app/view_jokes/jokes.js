@@ -34,4 +34,21 @@ angular.module('myApp.jokes', [])
     }).error((error) => {
         vm.error = error
     })
+
+    vm.addJoke = () => {
+        $http.post('http://localhost:8000/api/v1/jokes', {
+            body: vm.joke,
+            user_id: $rootScope.currentUser.id
+        }).success(function(response) {
+            /*console.log(vm.jokes)
+            vm.jokes.push(response.data)*/
+            vm.jokes.unshift(response.data)
+            console.log(vm.jokes)
+            vm.joke = ''
+            /*alert(data.message)
+            alert("Joke Created Successfully")*/
+        }).error(() => {
+            console.log("error")
+        })
+    }
 }])
