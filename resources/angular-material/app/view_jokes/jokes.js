@@ -63,4 +63,13 @@ angular.module('myApp.jokes', [])
             console.log("error")
         })
     }
+
+    vm.deleteJoke = (index, jokeId) => {
+        console.log(index, jokeId)
+
+        $http.delete('http://localhost:8000/api/v1/jokes/' + jokeId)
+            .success(() => {
+                vm.jokes.splice(index, 1)
+            })
+    }
 }])
