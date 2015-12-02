@@ -72,4 +72,29 @@ angular.module('myApp.jokes', [])
                 vm.jokes.splice(index, 1)
             })
     }
+
+    vm.lastpage = 1
+    vm.init = () => {
+        vm.lastpage = 1
+        $http({
+            url: 'http://localhost:8000/api/v1/jokes',
+            method: "GET",
+            params: {page: vm.lastpage}
+        }).success((jokes, status, headers, config) => {
+            vm.jokes = jokes.data
+            vm.currentpage = jokes.current_page
+        })
+    }
+    vm.init()
+
+    vm.loadMore = () => {
+        vm.lastpage += 1
+        $http({
+            url: 'http://localhost:8000/api/v1/jokes',
+            method: "GET",
+            params: {page: vm.lastpage}
+        }).success((jokes, status, headers, config) => {
+            vm.jokes = vm.jokes.concat(jokes.data)
+        })
+    }
 }])
