@@ -51,4 +51,16 @@ angular.module('myApp.jokes', [])
             console.log("error")
         })
     }
+
+    vm.updateJoke = (joke) => {
+        console.log(joke)
+        $http.put('http://localhost:8000/api/v1/jokes/' + joke.joke_id, {
+            body: joke.joke,
+            user_id: $rootScope.currentUser.id
+        }).success((response) => {
+            // alert("Joke Updated Successfully")
+        }).error(() => {
+            console.log("error")
+        })
+    }
 }])
